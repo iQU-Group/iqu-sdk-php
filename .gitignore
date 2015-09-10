@@ -3,3 +3,4 @@ bin/flume-http-driver.php
 bin/test.php
 *~
 vendor/
+composer.lock
