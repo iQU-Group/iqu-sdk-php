@@ -1,0 +1,28 @@
+{
+    "name": "iqu/php-sdk",
+    "description": "iQU php sdk",
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sebastian Lagemann",
+            "email": "sebastian@iqu.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "ext-curl": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Iqu\\Sdk\\": "src/"
+        }
+    },
+    "bin": [
+        "send-heartbeat"
+    ]
+
+}
