@@ -16,7 +16,7 @@ $options = (object)getopt('', array(
 ));
 
 if(!isset($options->apikey) || !isset($options->secretkey) || !isset($options->maxusers) || !isset($options->event) || !isset($options->runs)) {
-	die($argv[0].' --apikey=<api key> --secretkey=<secret key> --maxusers=<number> --event=<event type> --runs=<number of events to create>'."\n");
+	die($argv[0].' --apikey=<api key> --secretkey=<secret key> --maxusers=<number> --event=<event type> --runs=<number of events to create> [--trackerurl=http://url-to-tracker/]'."\n");
 }
 
 require __DIR__.'/../vendor/autoload.php';
