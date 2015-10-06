@@ -1,8 +1,9 @@
 {
-    "name": "iqu/php-sdk",
+    "name": "iqu/mobilize-pilot-sdk-php",
     "description": "iQU mobilize pilot php sdk",
     "minimum-stability": "stable",
     "license": "MIT",
+    "version": "1.0.0",
     "authors": [
         {
             "name": "Sebastian Lagemann",
