@@ -1,6 +1,6 @@
 {
     "name": "iqu/php-sdk",
-    "description": "iQU php sdk",
+    "description": "iQU mobilize pilot php sdk",
     "minimum-stability": "stable",
     "license": "MIT",
     "authors": [
@@ -18,11 +18,14 @@
     },
     "autoload": {
         "psr-4": {
-            "Iqu\\Sdk\\": "src/"
+            "Iqu\\Sdk\\": "src/",
+            "Iqu\\Sdk\\Event\\": "src/Event/",
+            "Iqu\\Sdk\\Traits\\": "src/Traits/",
+            "Iqu\\Sdk\\Transport\\": "src/Transport/"
         }
     },
     "bin": [
-        "send-heartbeat"
+        "mobilize-pilot-send-test-data"
     ]
 
 }
