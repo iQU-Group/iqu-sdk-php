@@ -1,0 +1,83 @@
+#!/usr/bin/env php
+<?php
+/**
+ *
+ *
+ * @author Sebastian Lagemann <sebastian@iqu.com>
+ */
+
+$options = (object)getopt('', array(
+	'apikey:',
+	'secretkey:',
+	'maxusers:',
+	'event:',
+	'runs:',
+	'trackerurl::'
+));
+
+if(!isset($options->apikey) || !isset($options->secretkey) || !isset($options->maxusers) || !isset($options->event) || !isset($options->runs)) {
+	die($argv[0].' --apikey=<api key> --secretkey=<secret key> --maxusers=<number> --event=<event type> --runs=<number of events to create> [--trackerurl=http://url-to-tracker/]'."\n");
+}
+
+require __DIR__.'/../vendor/autoload.php';
+
+$transportContainer = new \Iqu\Sdk\Transport_Container();
+if(isset($options->trackerurl)) {
+	$curlTransport = new \Iqu\Sdk\Transport\Curl($options->trackerurl);
+} else {
+	$curlTransport = new \Iqu\Sdk\Transport\Curl();
+}
+$transportContainer->add($curlTransport);
+$eventContainer = new \Iqu\Sdk\Event_Container($options->apikey, $options->secretkey);
+
+$disallowedMethods = array(
+	strtolower('getIosAdTracking'),
+	strtolower('getAndroidAdTracking')
+);
+$identifierSetMethods = get_class_methods('\Iqu\Sdk\Event_Identifiers');
+foreach($identifierSetMethods AS $key => $method) {
+	if(substr($method, 0, 3) == 'get' && !in_array(strtolower($method), $disallowedMethods)) {
+		unset($identifierSetMethods[$key]);
+	}
+}
+
+$uidList = array();
+for($i = 0; $i < $options->runs; $i++) {
+	echo ".";
+	flush();
+	$userId = getUserId($options, $i);
+	if(!isset($uidList[$userId])) {
+		$uidList[$userId] = 0;
+	}
+	$uidList[$userId]++;
+	switch ($options->event) {
+		case 'heartbeat':
+			$identifiers = new \Iqu\Sdk\Event_Identifiers();
+			$identifiers->setIquSdkId('hb::'.$userId);
+			$event = new \Iqu\Sdk\Event\Heartbeat($identifiers);
+			$eventContainer->add($event);
+			break;
+		case 'heartbeat-mix-userids':
+			$identifiers = new \Iqu\Sdk\Event_Identifiers();
+			$method = $identifierSetMethods[array_rand($identifierSetMethods)];
+			$identifiers->{$method}('hbmu::'.$userId);
+
+			$event = new \Iqu\Sdk\Event\Heartbeat($identifiers);
+			$eventContainer->add($event);
+			break;
+	}
+}
+echo "sending...";
+$start = microtime(true);
+if($transportContainer->send($eventContainer) === true) {
+	echo "done (".number_format(microtime(true) - $start, 3)."s)\n";
+	echo "amount of unique user ids: ".sizeof($uidList)."\n";
+} else {
+	echo "failed to send.\n";
+}
+
+function getUserId($options, $i) {
+	return rand(0, $options->maxusers);
+}
+
+?>
