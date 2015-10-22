@@ -15,6 +15,9 @@ abstract class Event {
 	private $timestamp;
 
 	public function __construct(Event_Identifiers $identifiers) {
+		if(!$identifiers->hasIdentifiers()) {
+			throw new Event_Exception('no identifiers set', Event_Exception::NO_IDENTIFIERS_SET);
+		}
 		$this->sequenceId = microtime(true).'_'.uniqid(mt_rand());
 		$this->identifiers = $identifiers;
 		$this->setTimestamp(time());

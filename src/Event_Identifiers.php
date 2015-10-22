@@ -120,6 +120,10 @@ class Event_Identifiers {
 		$this->custom_user_id = strval($value);
 		return $this;
 	}
+
+	public function hasIdentifiers() {
+		return !(sizeof($this->getData()) == 0);
+	}
 }
 
 ?>
